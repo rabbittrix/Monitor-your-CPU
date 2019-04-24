@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <title>CPU Usage</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://smoothiecharts.org/smoothie.js"></script> 
+    <style>
+    .divB{
+        text-align: center;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 30px;
+        color: red;
+        padding-top: 50px;
+    }    
+    .cpu {
+        /* padding-top: 20px; */
+        /* padding-bottom: -10px; */
+        top: 265px;
+        left: 200px;
+        z-index: 99;
+        transform: rotate(-90deg);
+        position: absolute;
+    }
+    </style>
+  </head>
+  
+  <body>                 
+        
+    <div class="divB">
+
+        
+            <P class="cpu"> CPU Usage: % <label id="cpu_list"></label></P>
+
+                                    
+        <canvas id="chart" width="1000" height="500"></canvas>
+    </div>
+   
+  </body>
+  
+  <script type="text/javascript">        
+         var socket = io();
+         var sequence = new TimeSeries();
+             
+         socket.on('cpu_usage', function(msg){
+            document.getElementById('cpu_list').innerHTML = msg;
+            sequence.append(new Date().getTime(), msg);
+         });
+         
+        var chart = new SmoothieChart();
+        chart.addTimeSeries(sequence);
+        chart.streamTo(document.getElementById('chart'), 1000);
+    </script>
+</html>
